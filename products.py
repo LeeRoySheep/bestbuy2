@@ -5,7 +5,10 @@ class Product:
         self.name = name
         self.price = price
         self.quantity = quantity
-        self.active = True
+        if quantity == 0:
+            self.active = False
+        if quantity > 0:
+            self.active = True
         if not name:
             raise ValueError("Name cannot be empty!")
         if price < 0:
@@ -21,7 +24,12 @@ class Product:
 
     def set_quantity(self, quantity):
         '''Sets the quantity of the product'''
+        if quantity == 0:
+            self.deactivate()
+        if quantity > 0 and self.quantity == 0:
+            self.activate()
         self.quantity = quantity
+
 
 
     def is_active(self):
@@ -50,6 +58,8 @@ class Product:
             self.quantity -= quantity
         else:
             raise ValueError("Not enough quantity to buy!")
+        if self.quantity == 0:
+            self.deactivate()
         return self.price * quantity
 
 

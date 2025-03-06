@@ -1,2 +1,3 @@
 # bestbuy2
- optimization of bestbuy
+ optimization of bestbuy a shop simulation
+
