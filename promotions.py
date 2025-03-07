@@ -47,5 +47,4 @@ class PercentDiscount(Promotion):
 
     def apply_promotion(self, product, quantity):
         """Calculates the discount for the cart."""
-        print(product.price * quantity * (100 - self.percent) / 100)
         return product.price * quantity * (100 - self.percent) / 100
