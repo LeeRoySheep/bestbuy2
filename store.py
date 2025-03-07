@@ -83,29 +83,35 @@ def main():
     thirty_percent = promotions.PercentDiscount("30% off!", percent=30)
     twenty_percent = promotions.PercentDiscount("20% off!", percent=20)
 
-    # Add promotions to products
+    # Add promotions and multi promotions to products
     product_list[0].promotions_lst = second_half_price
     product_list[0].promotions_lst = third_one_free
-    product_list[1].promotions_lst = third_one_free
-    product_list[1].promotions_lst = thirty_percent
+    # checking that every promotion class only gest added once also working
+    product_list[0].promotions_lst = third_one_free
+    product_list[0].promotions_lst = thirty_percent
     product_list[3].promotions_lst = twenty_percent
     best_buy = Store(product_list)
     products1 = best_buy.get_all_products()
     print(product_list[0])
     print(best_buy.get_total_quantity())
+    #Testing the result should return second half price for 15 prods which makes 3.5 free products
+    # should also give discount on 12 products of thirty percent which gives 3.6 free products
+    # should give 6 products for free as every third product is free which gives us 6 free products
+    # This gives us a total of 13.1 free products and leaves us with 4.9 products to pay
+    # seems to be calculating as I expected and wanted
     print(best_buy.order([(products1[0], 18)]))
     # setup initial stock of inventory
     mac2 = products.Product("MacBook Air M2", price=1450, quantity=100)
     bose2 = products.Product("Bose QuietComfort Earbuds", price=250, quantity=500)
     pixel2 = products.LimitedProduct("Google Pixel 7", price=500, quantity=250, maximum=1)
-
+    # More testing for functionality
     best_buy2 = Store([mac2, bose2])
     print(mac2)  # Should print `MacBook Air M2, Price: $1450 Quantity:100`
     print(mac2 > bose2)  # Should print True
     print(mac2 in best_buy2)  # Should print True
     print(pixel2 in best_buy2)  # Should print False
-    best_buy3 = best_buy + best_buy2
-    print(best_buy3.get_total_quantity())
+    best_buy3 = best_buy + best_buy2 # Should create new shop with cheapest price all promos and quantities
+    print(best_buy3.get_total_quantity()) # + override works as expected
     for product in best_buy3.list_of_products:
         print(product)
 

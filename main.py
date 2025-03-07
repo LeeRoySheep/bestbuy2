@@ -16,15 +16,15 @@ third_one_free = promotions.ThirdOneFree("Third One Free!")
 thirty_percent = promotions.PercentDiscount("30% off!", percent=30)
 
 # Add promotions to products
-product_list[0].set_promotion(second_half_price)
-product_list[1].set_promotion(third_one_free)
-product_list[3].set_promotion(thirty_percent)
+product_list[0].promotions_lst = second_half_price
+product_list[1].promotions_lst = third_one_free
+product_list[3].promotions_lst = thirty_percent
 # add product list to store
 best_buy = store.Store(product_list)
 
 
 def print_main_menu():
-    '''Prints the store menu'''
+    """Prints the store menu"""
     print("\n    Store Menu")
     print("    ----------")
     print("1. List all products in store")
@@ -34,17 +34,17 @@ def print_main_menu():
 
 
 def print_product_menu(store_obj):
-    '''Prints the product menu'''
+    """Prints the product menu"""
     index = 0
     print("------")
     for product in store_obj.list_of_products:
         index += 1
-        print(f"{index}. " + product.show())
+        print(f"{index}. {product}")
     print("------")
 
 
 def start(store_object):
-    '''Starts the store'''
+    """Starts the store"""
     while True:
         print_main_menu()
         choice = input("Enter your choice: ")
@@ -82,7 +82,7 @@ def start(store_object):
 
 
 def main():
-    '''main function to start the store'''
+    """main function to start the store"""
     start(best_buy)
 
 if __name__ == "__main__":
