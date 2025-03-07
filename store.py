@@ -1,6 +1,7 @@
 import products
 import promotions
 
+
 class Store:
     """Store class creating a stor with a list of products"""
     def __init__(self, list_of_products):

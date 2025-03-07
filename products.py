@@ -20,10 +20,12 @@ class Product:
         if quantity < 0:
             raise ValueError("Quantity cannot be negative!")
 
+
     @property
     def promotions_lst(self):
         """Returns the promotions of the product"""
         return self._promotions_lst
+
 
     @promotions_lst.setter
     def promotions_lst(self, promotion):
@@ -39,10 +41,12 @@ class Product:
             new_promotions.append(promotion)
             self._promotions_lst = new_promotions
 
+
     @property
     def quantity(self):
         """Returns the quantity of the product"""
         return self._quantity
+
 
     @quantity.setter
     def quantity(self, quantity):
@@ -57,10 +61,12 @@ class Product:
         if quantity < 0:
             raise ValueError("Quantity cannot be negative!")
 
+
     @property
     def price(self):
         """Returns the price of the product"""
         return self._price
+
 
     @price.setter
     def price(self, price):
@@ -70,10 +76,12 @@ class Product:
         else:
             raise ValueError("Price cannot be negative!")
 
+
     @property
     def name(self):
         """Returns the name of the product"""
         return self._name
+
 
     @name.setter
     def name(self, name):
@@ -83,17 +91,21 @@ class Product:
         else:
             raise ValueError("Name cannot be empty!")
 
+
     def is_active(self):
         """Returns the active status of the product"""
         return self._active
+
 
     def activate(self):
         """Activates the product"""
         self._active = True
 
+
     def deactivate(self):
         """Deactivates the product"""
         self._active = False
+
 
     def __str__(self):
         """Returns the product details as string"""
@@ -104,7 +116,6 @@ class Product:
                 + f" Quantity: {self.quantity},"
                 + " Promotions: None"
             )
-
         output_string = (
             f"{self.name},"
             + f" Price: ${self.price},"
@@ -120,13 +131,16 @@ class Product:
                 output_string += f" {promo.name},"
         return output_string
 
+
     def __gt__(self, other):
         """Returns True if the price of the product is greater than the other"""
         return self.price > other.price
 
+
     def __lt__(self, other):
         """Returns True if the price of the product is less than the other"""
         return self.price < other.price
+
 
     def buy(self, quantity):
         """Buys a quantity of the product, updates quantity and returns the total price"""
@@ -167,7 +181,6 @@ class Product:
                                 - promo.apply_promotion(self, quantity - (quantity // 3))
                         )
                 return total_price
-
             total_price = quantity * self.price
             for promo in self.promotions_lst:
                 total_price -= quantity * self.price - promo.apply_promotion(self, quantity)
@@ -223,6 +236,7 @@ class NonStockedProduct(Product):
                 total_price -= quantity * self.price - promo.apply_promotion(self, quantity)
             return total_price
         raise ValueError("Quantity cannot be negative or smaller than 0")
+
 
     def __str__(self):
         """Returns the product details as string"""

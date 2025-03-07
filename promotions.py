@@ -7,6 +7,7 @@ class Promotion(ABC):
         """Initializes the promotion."""
         self.name = name
 
+
     @abstractmethod
     def apply_promotion(self, product, quantity):
         """Calculates the discount for the cart."""
@@ -19,6 +20,7 @@ class SecondHalfPrice(Promotion):
     def __init__(self, name):
         """Initializes the promotion."""
         super().__init__(name)
+
 
     def apply_promotion(self, product, quantity):
         """Calculates the discount for the cart."""
@@ -34,6 +36,7 @@ class ThirdOneFree(Promotion):
         """Initializes the promotion."""
         super().__init__(name)
 
+
     def apply_promotion(self, product, quantity):
         """Calculates the discount for the cart."""
         return (product.price * quantity) - ((quantity // 3) * product.price)
@@ -45,6 +48,7 @@ class PercentDiscount(Promotion):
         """Initializes the promotion."""
         super().__init__(name)
         self.percent = percent
+
 
     def apply_promotion(self, product, quantity):
         """Calculates the discount for the cart."""
