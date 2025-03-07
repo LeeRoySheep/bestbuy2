@@ -35,7 +35,6 @@ class ThirdOneFree(Promotion):
 
     def apply_promotion(self, product, quantity):
         """Calculates the discount for the cart."""
-        print(product.name,(product.price * quantity) - (quantity // 3) * product.price)
         return (product.price * quantity) - ((quantity // 3) * product.price)
 
 class PercentDiscount(Promotion):

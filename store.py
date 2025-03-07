@@ -57,16 +57,19 @@ def main():
     second_half_price = promotions.SecondHalfPrice("Second Half price!")
     third_one_free = promotions.ThirdOneFree("Third One Free!")
     thirty_percent = promotions.PercentDiscount("30% off!", percent=30)
+    twenty_percent = promotions.PercentDiscount("20% off!", percent=20)
 
     # Add promotions to products
     product_list[0].set_promotion(second_half_price)
+    product_list[0].set_promotion(third_one_free)
     product_list[1].set_promotion(third_one_free)
-    product_list[3].set_promotion(thirty_percent)
+    product_list[0].set_promotion(thirty_percent)
+    product_list[3].set_promotion(twenty_percent)
     best_buy = Store(product_list)
     products1 = best_buy.get_all_products()
     print(product_list[0].show())
     print(best_buy.get_total_quantity())
-    print(best_buy.order([(products1[0], 2), (products1[1], 3)]))
+    print(best_buy.order([(products1[0], 18)]))
 
 if __name__ == "__main__":
     main()

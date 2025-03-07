@@ -29,16 +29,14 @@ class Product:
         """Sets the promotions of the product"""
         if not self.promotions_lst:
             self.promotions_lst = []
-        if promotion not in self.promotions_lst:
             self.promotions_lst.append(promotion)
-            print(1)
-        elif isinstance(promotion, promotions.PercentDiscount):
-            for promo in self.promotions_lst:
-                if isinstance(promo, promotions.PercentDiscount):
-                    promo.percent = promotion.percent
-                    promo.name = promotion.name
         else:
-            raise ValueError("Promotion already exists!")
+            new_promotions = []
+            for promo in self.promotions_lst:
+                if type(promo) != type(promotion):
+                    new_promotions.append(promo)
+            new_promotions.append(promotion)
+            self.promotions_lst = new_promotions
 
 
     def get_quantity(self):
@@ -105,24 +103,42 @@ class Product:
                 self.deactivate()
             if not self.promotions_lst:
                 return quantity * self.price
-            if self.promotions_lst:
-                discount_exception = 0
+            elif len(self.promotions_lst) == 1:
+                return self.promotions_lst[0].apply_promotion(self, quantity)
+            else:
+                discount_exception = False
                 for promo in self.promotions_lst:
-                    if isinstance(promo, promotions.SecondHalfPrice):
-                        discount_exception += 1
-                    elif isinstance(promo, promotions.ThirdOneFree):
-                        discount_exception += 1
-                if discount_exception == 2:
+                    # as every 3rd product is for free and gets 100% off
+                    # we need to make sure not to discount the free product
+                    # other double discounts are allowed and calculated to full extent
+                    if isinstance(promo, promotions.ThirdOneFree):
+                        discount_exception = True
+                if discount_exception:
                     # Setting total price and adding overlapping
                     # discounts as every 6th product is for free and gets 50% off
-                    total_price = ((quantity // 6) * self.price * 0.25)
+                    total_price = quantity * self.price
                     for promo in self.promotions_lst:
-                        total_price += promo.apply_promotion(self, quantity)
+                        if isinstance(promo, promotions.SecondHalfPrice):
+                            total_price -= (
+                                    ((quantity - (quantity // 6)) * self.price)
+                                    - promo.apply_promotion(self, (quantity - (quantity // 6)))
+
+                            )
+                        elif isinstance(promo, promotions.ThirdOneFree):
+                            total_price -= (
+                                    (quantity * self.price)
+                                    - promo.apply_promotion(self, quantity)
+                            )
+                        else:
+                            total_price -= (
+                                    ((quantity - quantity // 3) * self.price)
+                                    - promo.apply_promotion(self, quantity - (quantity // 3))
+                            )
                     return total_price
-                elif discount_exception != 2:
-                    total_price = 0
+                else:
+                    total_price = quantity * self.price
                     for promo in self.promotions_lst:
-                        total_price += promo.apply_promotion(self, quantity)
+                        total_price -= quantity * self.price - promo.apply_promotion(self, quantity)
                     return total_price
         else:
             raise ValueError("Not enough quantity to buy!")
@@ -140,24 +156,39 @@ class NonStockedProduct(Product):
         """Buys a quantity of the product and returns the total price"""
         if not self.promotions_lst:
             return quantity * self.price
+        elif len(self.promotions_lst) == 1:
+            return self.promotions_lst[0].apply_promotion(self, quantity)
         else:
-            discount_exception = 0
+            discount_exception = False
             for promo in self.promotions_lst:
-                if isinstance(promo, promotions.SecondHalfPrice):
-                    discount_exception += 1
-                elif isinstance(promo, promotions.ThirdOneFree):
-                    discount_exception += 1
-            if discount_exception == 2:
+                if isinstance(promo, promotions.ThirdOneFree):
+                    discount_exception = True
+            if discount_exception:
+                print('discount_exception')
                 # Setting total price and adding overlapping
                 # discounts as every 6th product is for free and gets 50% off
-                total_price = ((quantity // 6) * self.price * 0.25)
+                total_price = quantity * self.price
                 for promo in self.promotions_lst:
-                    total_price += promo.apply_promotion(self, quantity)
+                    if isinstance(promo, promotions.SecondHalfPrice):
+                        total_price -= (
+                            (quantity * self.price)
+                            - promo.apply_promotion(self, quantity - (quantity // 6))
+                        )
+                    elif isinstance(promo, promotions.ThirdOneFree):
+                        total_price -= (
+                            (quantity * self.price)
+                            - promo.apply_promotion(self, quantity)
+                        )
+                    else:
+                        total_price -= (
+                            (quantity * self.price)
+                            - promo.apply_promotion(self, quantity - (quantity // 3))
+                        )
                 return total_price
-            elif discount_exception != 2:
-                total_price = 0
+            else:
+                total_price = quantity * self.price
                 for promo in self.promotions_lst:
-                    total_price += promo.apply_promotion(self, quantity)
+                    total_price -= quantity * self.price - promo.apply_promotion(self, quantity)
                 return total_price
 
 
@@ -193,24 +224,42 @@ class LimitedProduct(Product):
             self.quantity -= quantity
             if not self.promotions_lst:
                 return quantity * self.price
+            elif len(self.promotions_lst) == 1:
+                return self.promotions_lst[0].apply_promotion(self, quantity)
             else:
-                discount_exception = 0
+                discount_exception = False
                 for promo in self.promotions_lst:
-                    if isinstance(promo, promotions.SecondHalfPrice):
-                        discount_exception += 1
-                    elif isinstance(promo, promotions.ThirdOneFree):
-                        discount_exception += 1
-                if discount_exception == 2:
+                    if isinstance(promo, promotions.ThirdOneFree):
+                        discount_exception = True
+                if discount_exception:
+                    print('discount_exception')
                     # Setting total price and adding overlapping
                     # discounts as every 6th product is for free and gets 50% off
-                    total_price = ((quantity // 6) * self.price * 0.25)
+                    total_price = quantity * self.price
                     for promo in self.promotions_lst:
-                        total_price += promo.apply_promotion(self, quantity)
+                        if isinstance(promo, promotions.SecondHalfPrice):
+                            total_price -= (
+                                    (quantity * self.price)
+                                    - promo.apply_promotion(self, quantity - (quantity // 6))
+                            )
+                        elif isinstance(promo, promotions.ThirdOneFree):
+                            total_price -= (
+                                    (quantity * self.price)
+                                    - promo.apply_promotion(self, quantity)
+                            )
+                        else:
+                            total_price -= (
+                                    (quantity * self.price)
+                                    - promo.apply_promotion(self, quantity - (quantity // 3))
+                            )
                     return total_price
-                elif discount_exception != 2:
-                    total_price = 0
+                else:
+                    total_price = quantity * self.price
                     for promo in self.promotions_lst:
-                        total_price += promo.apply_promotion(self, quantity)
+                        total_price -= (
+                            (quantity * self.price)
+                            - promo.apply_promotion(self, quantity)
+                        )
                     return total_price
         else:
             raise ValueError(
