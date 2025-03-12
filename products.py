@@ -185,7 +185,10 @@ class Product:
             for promo in self.promotions_lst:
                 total_price -= quantity * self.price - promo.apply_promotion(self, quantity)
             return total_price
-        raise ValueError("Not enough quantity in store or negative quantity!")
+        if quantity <= 0:
+            raise ValueError("Negative quantity! Please try again.")
+        if quantity > self.quantity:
+            raise ValueError("Not enough quantity in store! Please try again.")
 
 
 class NonStockedProduct(Product):
@@ -235,7 +238,7 @@ class NonStockedProduct(Product):
             for promo in self.promotions_lst:
                 total_price -= quantity * self.price - promo.apply_promotion(self, quantity)
             return total_price
-        raise ValueError("Quantity cannot be negative or smaller than 0")
+        raise ValueError("Quantity cannot be negative!")
 
 
     def __str__(self):
@@ -304,9 +307,17 @@ class LimitedProduct(Product):
             for promo in self.promotions_lst:
                 total_price -= quantity * self.price - promo.apply_promotion(self, quantity)
             return total_price
-        raise ValueError(
-                f"Not enough stock or negative quantity({self.quantity})"
-                + f" or tried to buy more than maximum({self.maximum})!"
+        if quantity <= 0:
+            raise ValueError(
+                "No negative quantity possible! Please try again!"
+            )
+        if quantity >= self.quantity:
+            raise ValueError(
+                "Not enough quantity in store! Please try again!"
+            )
+        if quantity > self.maximum:
+            raise ValueError(
+                "You tried to order more then given limit! Please try again!"
             )
 
 

@@ -1,6 +1,7 @@
 import store
 import products
 import promotions
+import copy
 
 # setup initial stock of inventory
 product_list = [ products.Product("MacBook Air M2", price=1450, quantity=100),
@@ -37,7 +38,7 @@ def print_product_menu(store_obj):
     """Prints the product menu"""
     index = 0
     print("------")
-    for product in store_obj.list_of_products:
+    for product in store_obj.get_all_products():
         index += 1
         print(f"{index}. {product}")
     print("------")
@@ -62,8 +63,12 @@ def start(store_object):
                 if not product_index or not order_quantity:
                     break
                 try:
-                    product = store_object.list_of_products[int(product_index) - 1]
-                    order_amount = int(order_quantity)
+                    if 0 < int(product_index) <= len(store_object.get_all_products()):
+                        product = store_object.get_all_products()[int(product_index) - 1]
+                        order_amount = int(order_quantity)
+                    else:
+                        print("Wrong # choose a number from the list of products!")
+                        continue
                 except ValueError:
                     print("Invalid input! Try again!")
                     continue
@@ -72,8 +77,13 @@ def start(store_object):
                     continue
                 order_list.append((product, order_amount))
             try:
+                # making a copy of old product status as exception might stop
+                # the orde, even if some orders where already booked
+                old_products = [copy.copy(product) for product in store_object.list_of_products]
                 print(f"Order made! Total payment: ${store_object.order(order_list)}")
             except ValueError as val_err:
+                #bring order status back to original status
+                store_object.list_of_products = old_products
                 print(val_err)
         elif choice == "4":
             break

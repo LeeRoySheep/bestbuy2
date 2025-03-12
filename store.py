@@ -36,7 +36,7 @@ class Store:
         """Orders a list of products"""
         total_price = 0
         for product_quantity in shopping_list:
-            for product in self.list_of_products:
+            for product in self.get_all_products():
                 if product == product_quantity[0]:
                     total_price += product.buy(product_quantity[1])
         return total_price
