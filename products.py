@@ -9,10 +9,7 @@ class Product:
         self._price = price
         self._quantity = quantity
         self._promotions_lst = promotions_lst
-        if quantity == 0:
-            self._active = False
-        if quantity > 0:
-            self._active = True
+        self._active = quantity > 0
         if not name:
             raise ValueError("Name cannot be empty!")
         if price < 0:
@@ -147,9 +144,8 @@ class Product:
         # Checking for overlapping discounts
         if 0 < quantity <= self.quantity:
             self.quantity -= quantity
-            if self.quantity == 0:
-                self.deactivate()
             if not self.promotions_lst:
+                # No discounts
                 return quantity * self.price
             if len(self.promotions_lst) == 1:
                 return self.promotions_lst[0].apply_promotion(self, quantity)
@@ -175,7 +171,7 @@ class Product:
                                 (quantity * self.price)
                                 - promo.apply_promotion(self, quantity)
                         )
-                    else:
+                    elif isinstance(promo, promotions.PercentDiscount):
                         total_price -= (
                                 ((quantity - quantity // 3) * self.price)
                                 - promo.apply_promotion(self, quantity - (quantity // 3))

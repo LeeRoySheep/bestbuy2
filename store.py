@@ -35,10 +35,10 @@ class Store:
     def order(self, shopping_list):
         """Orders a list of products"""
         total_price = 0
-        for product_quantity in shopping_list:
+        for prod ,val in shopping_list.items():
             for product in self.get_all_products():
-                if product == product_quantity[0]:
-                    total_price += product.buy(product_quantity[1])
+                if product == prod:
+                    total_price += product.buy(val)
         return total_price
 
 
@@ -95,7 +95,7 @@ def main():
     products1 = best_buy.get_all_products()
     print(product_list[0])
     print(best_buy.get_total_quantity())
-    #Testing the result should return second half price for 15 prods which makes 3.5 free products
+    # Testing the result should return second half price for 15 prods which makes 3.5 free products
     # should also give discount on 12 products of thirty percent which gives 3.6 free products
     # should give 6 products for free as every third product is free which gives us 6 free products
     # This gives us a total of 13.1 free products and leaves us with 4.9 products to pay
@@ -111,8 +111,9 @@ def main():
     print(mac2 > bose2)  # Should print True
     print(mac2 in best_buy2)  # Should print True
     print(pixel2 in best_buy2)  # Should print False
-    best_buy3 = best_buy + best_buy2 # Should create new shop with cheapest price all promos and quantities
-    print(best_buy3.get_total_quantity()) # + override works as expected
+    # Should create new shop with cheapest price all promos and quantities
+    best_buy3 = best_buy + best_buy2
+    print(best_buy3.get_total_quantity())  # + override works as expected
     for product in best_buy3.list_of_products:
         print(product)
 
